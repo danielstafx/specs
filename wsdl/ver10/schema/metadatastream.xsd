@@ -266,6 +266,52 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>	<!-- first Vendor then ONVIF -->
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="ImageCrop">
+		<xs:complexContent>
+			<xs:extension base="tt:ObjectId">
+				<xs:sequence>
+					<xs:element name="ImageRef" type="xs:anyURI" minOccurs="0"/>
+					<xs:element name="Image" type="xs:base64Binary" minOccurs="0"/>
+					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>	<!-- reserved for ONVIF -->
+				</xs:sequence>
+				<xs:attribute name="UtcTime" type="xs:dateTime" use="required"/>
+				<xs:anyAttribute processContents="lax"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ObjectTrack">
+		<xs:complexContent>
+			<xs:extension base="tt:ObjectId">
+				<xs:sequence>
+					<xs:element name="StartTime" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>Track start time, equal to the UtcTime of the Frame in which the object was first observed.</xs:documentation>
+						</xs:annotation>
+				    </xs:element>
+					<xs:element name="EndTime" type="xs:dateTime" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Track end time, equal to the UtcTime of the Frame in which the object was last observed. Only set after object has been deleted.</xs:documentation>
+						</xs:annotation>
+				    </xs:element>
+					<xs:element name="ObjectConsolidation" type="tt:Object">
+						<xs:annotation>
+							<xs:documentation>Consolidation of several frame observations of an object over a track. Shape and behaviour information is not used. The consolidation is calculated over all known data up to the time of generation of the object track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Snapshot" type="tt:ImageCrop" minOccurs="0"/>
+					<xs:element name="Extension" type="tt:ObjectTrackExtension" minOccurs="0"/>
+					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>	<!-- reserved for ONVIF -->
+				</xs:sequence>
+				<xs:attribute name="UtcTime" type="xs:dateTime" use="required"/>
+				<xs:anyAttribute processContents="lax"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ObjectTrackExtension">
+		<xs:sequence>
+			<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>	<!-- first Vendor then ONVIF -->
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="Frame">
 		<xs:sequence>
 			<xs:element name="PTZStatus" type="tt:PTZStatus" minOccurs="0"/>
